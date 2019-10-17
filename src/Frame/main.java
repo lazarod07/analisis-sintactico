@@ -125,6 +125,16 @@ public class main extends javax.swing.JFrame {
             p = p.link;
         }
     }
+    
+    String elim_rec(String p){
+        Nodo k = ptr;
+        while(k != null){
+            if(tienerecursividad(k.getProd())){
+                
+            }
+        }
+        return "";
+    }
 
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
