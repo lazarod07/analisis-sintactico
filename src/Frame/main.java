@@ -72,26 +72,29 @@ public class main extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    boolean tienerecursividad(String p) {
+    String tienerecursividad(String p) {
         String cab = p.substring(0, 1);
-        String [] prods = p.split("\\|");
+        String[] prods = p.split("\\|");
         int i = 0;
-        while(prods.length > i){
-            if(i == 0){
-                if(prods[i].substring(3,4).equals(cab)){
-                    return true;
-                }else{
-                    i++;
+        String r = "";
+        while (prods.length > i) {
+            if (i == 0) {
+                if (prods[i].substring(3, 4).equals(cab)) {
+                    r = i + "_";
                 }
-            }else{
-                if(prods[i].substring(0, 1).equals(cab)){
-                    return true;
-                }else{
-                    i++;
+                i++;
+            } else {
+                if (prods[i].substring(0, 1).equals(cab)) {
+                    r = r + i + "_";
                 }
+                i++;
             }
         }
-        return false;
+        if (!"".equals(r)) {
+            return r;
+        } else {
+            return "-1";
+        }
     }
 
     public void agregar_prod(String p) {
@@ -103,7 +106,7 @@ public class main extends javax.swing.JFrame {
             Nodo k = ptr;
             while (k != null) {
                 if (k.getProd().substring(0, 1).equals(nt)) {
-                    k.setProd(k.getProd()+"|" + p.split(">")[1]);
+                    k.setProd(k.getProd() + "|" + p.split(">")[1]);
                     break;
                 } else {
                     if (k.link == null) {
@@ -119,21 +122,87 @@ public class main extends javax.swing.JFrame {
 
     public void mostrar_prod() {
         Nodo p = ptr;
+        String prueba;
         while (p != null) {
+            if(!"-1".equals(tienerecursividad(p.getProd()))){
+                elim_rec(p.getProd());
+            }
             System.out.println(p.getProd());
-            System.out.println("Hay recursividad: "+tienerecursividad(p.getProd()));
             p = p.link;
         }
     }
-    
-    String elim_rec(String p){
+
+    public void elim_rec(String p) {
+        String[] prods = p.split("\\|");
+        String alfa = "", prima, nueva;
+        String beta = "";
         Nodo k = ptr;
-        while(k != null){
-            if(tienerecursividad(k.getProd())){
-                
+        int i = 0, cont = 0, j = 0, posi, h = 0, t, cont2 = 0;
+        String pos;
+        while (k != null) {
+            if (k.getProd().equals(p)) {
+                pos = tienerecursividad(k.getProd());
+                if (!"-1".equals(pos)) {
+                    String[] r = pos.split("_");
+                    while (j < r.length) {
+                        posi = Integer.parseInt(r[j]);
+                        if (j == 0) {
+                            if (posi == 0) {
+                                alfa = prods[posi].substring(4, prods[posi].length()) + p.substring(0, 1) + "'";
+                            } else {
+                                alfa = prods[posi].substring(1, prods[posi].length()) + p.substring(0, 1) + "'";
+                            }
+                        } else {
+                            if (posi == 0) {
+                                alfa = alfa + "|" + prods[posi].substring(4, prods[posi].length()) + p.substring(0, 1) + "'";
+                            } else {
+                                alfa = alfa + "|" + prods[posi].substring(1, prods[posi].length()) + p.substring(0, 1) + "'";
+                            }
+                        }
+                        j++;
+                    }
+                    while (i < prods.length) {
+                        cont2 = 0;
+                        h = 0;
+                        while (h < r.length) {
+                            t = Integer.parseInt(r[h]);
+                            if (i == t) {
+                                cont2++;
+                            }
+                            h++;
+                        }
+                        if (cont2 == 0) {
+                            if (i == 0) {
+                                beta = prods[i].substring(3, prods[i].length())+ p.substring(0, 1) + "'";
+                                cont++;
+                            } else {
+                                if (cont == 0) {
+                                    beta = prods[i]+ p.substring(0, 1) + "'";
+                                    cont++;
+                                } else {
+                                    beta = beta + "|" + prods[i]+ p.substring(0, 1) + "'";
+                                }
+                            }
+                            cont++;
+                        }
+                        i++;
+                    }
+                }
+                if( beta.equals("")){
+                    beta = p.substring(0, 1) + "'";
+                }
+                nueva = p.substring(0, 1) + "->"+ beta;
+                prima = p.substring(0, 1) + "'" + "->"+ alfa+"|&";
+                k.setProd(nueva);
+                Nodo temp = k.link;
+                Nodo n = new Nodo(prima);
+                k.link = n;
+                n.link = temp;
+                break;
+            } else {
+                k = k.link;
             }
         }
-        return "";
     }
 
 
