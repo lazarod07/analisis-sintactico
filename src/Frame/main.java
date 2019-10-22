@@ -22,6 +22,8 @@ public class main extends javax.swing.JFrame {
      */
     File file;
     Nodo ptr;
+    String [][] primas;
+    int indice = 0;
 
     public main() {
         initComponents();
@@ -120,16 +122,41 @@ public class main extends javax.swing.JFrame {
         }
     }
 
+    public void agregar_prod2(String p) {
+        String nt = p.substring(0, 1);
+        if (ptr == null) {
+            Nodo c = new Nodo(p);
+            ptr = c;
+        } else {
+            Nodo k = ptr;
+            while (k.link != null) {
+                k = k.link;
+            }
+            Nodo n = new Nodo(p);
+            k.link = n;
+        }
+    }
+    
     public void mostrar_prod() {
         Nodo p = ptr;
         String prueba;
         while (p != null) {
-            if(!"-1".equals(tienerecursividad(p.getProd()))){
-                elim_rec(p.getProd());
+            if (!"-1".equals(tienerecursividad(p.getProd()))) {
+                elim_rec2(p);
             }
             System.out.println(p.getProd());
             p = p.link;
         }
+    }
+
+    int tamaño() {
+        int i = 0;
+        Nodo p = ptr;
+        while (p != null) {
+            i++;
+            p = p.link;
+        }
+        return i;
     }
 
     public void elim_rec(String p) {
@@ -173,14 +200,14 @@ public class main extends javax.swing.JFrame {
                         }
                         if (cont2 == 0) {
                             if (i == 0) {
-                                beta = prods[i].substring(3, prods[i].length())+ p.substring(0, 1) + "'";
+                                beta = prods[i].substring(3, prods[i].length()) + p.substring(0, 1) + "'";
                                 cont++;
                             } else {
                                 if (cont == 0) {
-                                    beta = prods[i]+ p.substring(0, 1) + "'";
+                                    beta = prods[i] + p.substring(0, 1) + "'";
                                     cont++;
                                 } else {
-                                    beta = beta + "|" + prods[i]+ p.substring(0, 1) + "'";
+                                    beta = beta + "|" + prods[i] + p.substring(0, 1) + "'";
                                 }
                             }
                             cont++;
@@ -188,11 +215,11 @@ public class main extends javax.swing.JFrame {
                         i++;
                     }
                 }
-                if( beta.equals("")){
+                if (beta.equals("")) {
                     beta = p.substring(0, 1) + "'";
                 }
-                nueva = p.substring(0, 1) + "->"+ beta;
-                prima = p.substring(0, 1) + "'" + "->"+ alfa+"|&";
+                nueva = p.substring(0, 1) + "->" + beta;
+                prima = p.substring(0, 1) + "'" + "->" + alfa + "|&";
                 k.setProd(nueva);
                 Nodo temp = k.link;
                 Nodo n = new Nodo(prima);
@@ -203,6 +230,70 @@ public class main extends javax.swing.JFrame {
                 k = k.link;
             }
         }
+    }
+
+    public void elim_rec2(Nodo p) {
+        String prod = p.getProd();
+        String alfa = p.getProd().substring(4, p.getProd().length());
+        String prima = dame_prima(p.getProd());
+        agregar_prima(p.getProd(), prima);
+        if(ya_e(prod)){
+            agregar_prod2(prima+"->&");
+        }
+        primas[indice][0] = p.getProd().substring(0,1);
+        p.setProd(prima+"->"+alfa+prima);
+        primas[indice][1] = prima;
+        indice++; 
+    }
+    
+    boolean ya_e(String p){
+        int i = 0;
+        String prueba1;
+        String prueba2;
+        while(i < primas.length){
+            prueba1 = p.substring(0,1);
+            prueba2 = primas[i][0];
+            if(p.substring(0,1).equals(primas[i][0])){
+                return false;
+            }else{
+                i++;
+            }
+        }
+        return true;
+    }
+    
+    public void agregar_prima(String p, String prima){
+        Nodo k = ptr;
+        while(k != null){
+            if(k.getProd().substring(0, 1).equals(p.substring(0, 1)) && k.tp == false && "-1".equals(tienerecursividad(k.getProd()))){
+                k.setProd(k.getProd()+prima);
+                k.tp = true;
+            }
+            k = k.link;
+        }
+    }
+   
+    String dame_prima(String p) {
+        String[] abecedario = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+        Nodo k = ptr;
+        int j = 0, t = primas.length;
+        int i = 0;
+        String prima, prueba1,  prueba2;
+        while(j < primas.length){    
+            if(p.substring(0, 1).equals(primas[j][0])){
+                return primas[j][1];
+            }else{
+                j++;
+            }
+        }
+        while (k != null) {
+            if (k.getProd().substring(0, 1).equals(abecedario[i])) {
+                i++;
+            } else {
+                k = k.link;
+            }
+        }
+        return abecedario[i];
     }
 
 
@@ -218,9 +309,10 @@ public class main extends javax.swing.JFrame {
                 reader = new BufferedReader(new FileReader(file));
                 line = reader.readLine();
                 while (line != null) {
-                    agregar_prod(line);
+                    agregar_prod2(line);
                     line = reader.readLine();
                 }
+                primas = new String[tamaño()][2];
                 mostrar_prod();
             } catch (Exception e) {
                 System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeee");

@@ -11,6 +11,7 @@ package Lista;
  */
 public class Nodo {
     String prod;
+    public Boolean tp = false;
     public Nodo link;
     public void setProd(String prod) {
         this.prod = prod;
