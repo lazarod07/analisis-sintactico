@@ -9,6 +9,7 @@ import Lista.Nodo;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
 import javax.swing.JFileChooser;
 
 /**
@@ -143,6 +144,7 @@ public class main extends javax.swing.JFrame {
         while (p != null) {
             if (!"-1".equals(tienerecursividad(p.getProd()))) {
                 elim_rec2(p);
+                hay_fact(p.getProd());
             }
             System.out.println(p.getProd());
             p = p.link;
@@ -248,11 +250,7 @@ public class main extends javax.swing.JFrame {
     
     boolean ya_e(String p){
         int i = 0;
-        String prueba1;
-        String prueba2;
         while(i < primas.length){
-            prueba1 = p.substring(0,1);
-            prueba2 = primas[i][0];
             if(p.substring(0,1).equals(primas[i][0])){
                 return false;
             }else{
@@ -294,6 +292,30 @@ public class main extends javax.swing.JFrame {
             }
         }
         return abecedario[i];
+    }
+    
+    boolean hay_fact(String p){
+        int i = p.length();
+        ArrayList r = a_comparar(p.charAt(0));
+        String prueba;
+        while(i > 3){
+            prueba = p.substring(3, i);
+            
+            i--;
+        }
+        return false;
+    }
+    
+    ArrayList a_comparar(char c){
+        ArrayList r = new ArrayList();
+        Nodo k = ptr;
+        while(k != null){
+            if (k.getProd().charAt(0) == c){
+                r.add(k.getProd());
+            }
+            k = k.link;
+        }
+        return r;
     }
 
 
