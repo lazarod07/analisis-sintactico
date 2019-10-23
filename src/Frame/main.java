@@ -23,7 +23,7 @@ public class main extends javax.swing.JFrame {
      */
     File file;
     Nodo ptr;
-    String [][] primas;
+    String[][] primas;
     int indice = 0;
 
     public main() {
@@ -137,15 +137,16 @@ public class main extends javax.swing.JFrame {
             k.link = n;
         }
     }
-    
+
     public void mostrar_prod() {
         Nodo p = ptr;
         String prueba;
         while (p != null) {
             if (!"-1".equals(tienerecursividad(p.getProd()))) {
                 elim_rec2(p);
-                hay_fact(p.getProd());
+
             }
+            hay_fact(p.getProd());
             System.out.println(p.getProd());
             p = p.link;
         }
@@ -239,48 +240,48 @@ public class main extends javax.swing.JFrame {
         String alfa = p.getProd().substring(4, p.getProd().length());
         String prima = dame_prima(p.getProd());
         agregar_prima(p.getProd(), prima);
-        if(ya_e(prod)){
-            agregar_prod2(prima+"->&");
+        if (ya_e(prod)) {
+            agregar_prod2(prima + "->&");
         }
-        primas[indice][0] = p.getProd().substring(0,1);
-        p.setProd(prima+"->"+alfa+prima);
+        primas[indice][0] = p.getProd().substring(0, 1);
+        p.setProd(prima + "->" + alfa + prima);
         primas[indice][1] = prima;
-        indice++; 
+        indice++;
     }
-    
-    boolean ya_e(String p){
+
+    boolean ya_e(String p) {
         int i = 0;
-        while(i < primas.length){
-            if(p.substring(0,1).equals(primas[i][0])){
+        while (i < primas.length) {
+            if (p.substring(0, 1).equals(primas[i][0])) {
                 return false;
-            }else{
+            } else {
                 i++;
             }
         }
         return true;
     }
-    
-    public void agregar_prima(String p, String prima){
+
+    public void agregar_prima(String p, String prima) {
         Nodo k = ptr;
-        while(k != null){
-            if(k.getProd().substring(0, 1).equals(p.substring(0, 1)) && k.tp == false && "-1".equals(tienerecursividad(k.getProd()))){
-                k.setProd(k.getProd()+prima);
+        while (k != null) {
+            if (k.getProd().substring(0, 1).equals(p.substring(0, 1)) && k.tp == false && "-1".equals(tienerecursividad(k.getProd()))) {
+                k.setProd(k.getProd() + prima);
                 k.tp = true;
             }
             k = k.link;
         }
     }
-   
+
     String dame_prima(String p) {
         String[] abecedario = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
         Nodo k = ptr;
         int j = 0, t = primas.length;
         int i = 0;
-        String prima, prueba1,  prueba2;
-        while(j < primas.length){    
-            if(p.substring(0, 1).equals(primas[j][0])){
+        String prima, prueba1, prueba2;
+        while (j < primas.length) {
+            if (p.substring(0, 1).equals(primas[j][0])) {
                 return primas[j][1];
-            }else{
+            } else {
                 j++;
             }
         }
@@ -293,24 +294,38 @@ public class main extends javax.swing.JFrame {
         }
         return abecedario[i];
     }
-    
-    boolean hay_fact(String p){
+
+    boolean hay_fact(String p) {
         int i = p.length();
-        ArrayList r = a_comparar(p.charAt(0));
-        String prueba;
-        while(i > 3){
-            prueba = p.substring(3, i);
-            
-            i--;
+        ArrayList<String> fact = new ArrayList<>();
+        ArrayList<String> list = a_comparar(p);
+        String prueba, prueba2, prueba3;
+        for (String k : list) {
+            while (i > 3) {
+                prueba = k.substring(3, i);
+                for (String l : list) {
+                    prueba2 = l;
+                    if ((l.length() - 3) >= prueba.length()) {
+                        prueba3 = l.substring(3, 3 + prueba.length());
+                        if (prueba.equals(l.substring(3, 3 + prueba.length()))) {
+                            fact.add(k+" , "+prueba+" , "+prueba.length());
+                        }
+                    }
+                }
+                i--;
+            }
+        }
+        for(String f : fact){
+            System.out.println(f);
         }
         return false;
     }
-    
-    ArrayList a_comparar(char c){
-        ArrayList r = new ArrayList();
+
+    ArrayList a_comparar(String prod) {
+        ArrayList<String> r = new ArrayList<>();
         Nodo k = ptr;
-        while(k != null){
-            if (k.getProd().charAt(0) == c){
+        while (k != null) {
+            if (k.getProd().charAt(0) == prod.charAt(0) && !prod.equals(k.getProd())) {
                 r.add(k.getProd());
             }
             k = k.link;
