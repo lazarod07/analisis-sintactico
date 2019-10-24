@@ -147,7 +147,7 @@ public class main extends javax.swing.JFrame {
                 elim_rec2(p);
 
             }
-            if(!probadas.contains(p.getProd().charAt(0))){
+            if (!probadas.contains(p.getProd().charAt(0))) {
                 System.out.println(hay_fact(p.getProd()));
             }
             System.out.println(p.getProd());
@@ -299,11 +299,12 @@ public class main extends javax.swing.JFrame {
     }
 
     boolean hay_fact(String p) {
-        int i,cont = 0, cont2 = 0, j = 0;
+        int i, cont = 0, cont2 = 0, j = 0;
         probadas.add(p.charAt(0));
         ArrayList<String> fact = new ArrayList<>();
         ArrayList<String> list = a_comparar(p);
         String prueba, alfa = null, mayor = "0", tamaño = "0";
+        String ro = "";
         for (String k : list) {
             i = k.length();
             while (i > 3) {
@@ -313,35 +314,53 @@ public class main extends javax.swing.JFrame {
                     if ((l.length() - 3) >= prueba.length()) {
                         if (prueba.equals(l.substring(3, 3 + prueba.length()))) {
                             cont++;
+                        } else {
+                            if ("".equals(ro)) {
+                                ro = l;
+                            } else {
+                                ro = ro + "cri" + l;
+                            }
+                        }
+                    } else {
+                        if ("".equals(ro)) {
+                            ro = l;
+                        } else {
+                            ro = ro + "cri" + l;
                         }
                     }
                 }
-                fact.add(k+","+prueba+","+cont+","+prueba.length());
+                fact.add(k + "cris" + prueba + "cris" + cont + "cris" + prueba.length()+"cris"+ro);
                 i--;
             }
         }
-        
-        for(String f : fact){
-            String[] factores = f.split(",");
-            if(!factores[2].equals("0")){
+
+        for (String f : fact) {
+            String[] factores = f.split("cris");
+            if (!factores[2].equals("0")) {
                 cont2++;
             }
-            if(factores[2].compareTo(mayor) > 0){
-                if(factores[2].compareTo(mayor) == 0){
-                    if(factores[3].compareTo(tamaño) > 0){
+            ro = "";
+            if (factores[2].compareTo(mayor) > 0) {
+                if (factores[2].compareTo(mayor) == 0) {
+                    if (factores[3].compareTo(tamaño) > 0) {
+                        mayor = factores[2];
                         alfa = factores[1];
                         tamaño = factores[3];
+                        ro = factores[4];
                     }
-                }else{
+                } else {
+                    mayor = factores[2];
                     alfa = factores[1];
                     tamaño = factores[3];
+                    ro = factores[4];
                 }
-                
+
             }
         }
-        if (cont2 == 0){
+        if (cont2 == 0) {
             return false;
-        }else{
+        } else {
+            System.out.println(ro);
             System.out.println(alfa);
             return true;
         }
