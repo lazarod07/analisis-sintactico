@@ -24,6 +24,7 @@ public class main extends javax.swing.JFrame {
     File file;
     Nodo ptr;
     String[][] primas;
+    ArrayList<Character> probadas = new ArrayList();
     int indice = 0;
 
     public main() {
@@ -146,7 +147,9 @@ public class main extends javax.swing.JFrame {
                 elim_rec2(p);
 
             }
-            hay_fact(p.getProd());
+            if(!probadas.contains(p.getProd().charAt(0))){
+                System.out.println(hay_fact(p.getProd()));
+            }
             System.out.println(p.getProd());
             p = p.link;
         }
@@ -296,36 +299,59 @@ public class main extends javax.swing.JFrame {
     }
 
     boolean hay_fact(String p) {
-        int i = p.length();
+        int i,cont = 0, cont2 = 0, j = 0;
+        probadas.add(p.charAt(0));
         ArrayList<String> fact = new ArrayList<>();
         ArrayList<String> list = a_comparar(p);
-        String prueba, prueba2, prueba3;
+        String prueba, alfa = null, mayor = "0", tamaño = "0";
         for (String k : list) {
+            i = k.length();
             while (i > 3) {
                 prueba = k.substring(3, i);
+                cont = -1;
                 for (String l : list) {
-                    prueba2 = l;
                     if ((l.length() - 3) >= prueba.length()) {
-                        prueba3 = l.substring(3, 3 + prueba.length());
                         if (prueba.equals(l.substring(3, 3 + prueba.length()))) {
-                            fact.add(k+" , "+prueba+" , "+prueba.length());
+                            cont++;
                         }
                     }
                 }
+                fact.add(k+","+prueba+","+cont+","+prueba.length());
                 i--;
             }
         }
+        
         for(String f : fact){
-            System.out.println(f);
+            String[] factores = f.split(",");
+            if(!factores[2].equals("0")){
+                cont2++;
+            }
+            if(factores[2].compareTo(mayor) > 0){
+                if(factores[2].compareTo(mayor) == 0){
+                    if(factores[3].compareTo(tamaño) > 0){
+                        alfa = factores[1];
+                        tamaño = factores[3];
+                    }
+                }else{
+                    alfa = factores[1];
+                    tamaño = factores[3];
+                }
+                
+            }
         }
-        return false;
+        if (cont2 == 0){
+            return false;
+        }else{
+            System.out.println(alfa);
+            return true;
+        }
     }
 
     ArrayList a_comparar(String prod) {
         ArrayList<String> r = new ArrayList<>();
         Nodo k = ptr;
         while (k != null) {
-            if (k.getProd().charAt(0) == prod.charAt(0) && !prod.equals(k.getProd())) {
+            if (k.getProd().charAt(0) == prod.charAt(0)) {
                 r.add(k.getProd());
             }
             k = k.link;
