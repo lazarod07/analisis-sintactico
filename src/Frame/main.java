@@ -303,8 +303,8 @@ public class main extends javax.swing.JFrame {
         probadas.add(p.charAt(0));
         ArrayList<String> fact = new ArrayList<>();
         ArrayList<String> list = a_comparar(p);
+        ArrayList<String> ro;
         String prueba, alfa = null, mayor = "0", tamaño = "0";
-        String ro = "";
         for (String k : list) {
             i = k.length();
             while (i > 3) {
@@ -314,22 +314,10 @@ public class main extends javax.swing.JFrame {
                     if ((l.length() - 3) >= prueba.length()) {
                         if (prueba.equals(l.substring(3, 3 + prueba.length()))) {
                             cont++;
-                        } else {
-                            if ("".equals(ro)) {
-                                ro = l;
-                            } else {
-                                ro = ro + "cri" + l;
-                            }
-                        }
-                    } else {
-                        if ("".equals(ro)) {
-                            ro = l;
-                        } else {
-                            ro = ro + "cri" + l;
                         }
                     }
                 }
-                fact.add(k + "cris" + prueba + "cris" + cont + "cris" + prueba.length()+"cris"+ro);
+                fact.add(k + "cris" + prueba + "cris" + cont + "cris" + prueba.length());
                 i--;
             }
         }
@@ -339,29 +327,24 @@ public class main extends javax.swing.JFrame {
             if (!factores[2].equals("0")) {
                 cont2++;
             }
-            ro = "";
             if (factores[2].compareTo(mayor) > 0) {
                 if (factores[2].compareTo(mayor) == 0) {
                     if (factores[3].compareTo(tamaño) > 0) {
                         mayor = factores[2];
                         alfa = factores[1];
                         tamaño = factores[3];
-                        ro = factores[4];
                     }
                 } else {
                     mayor = factores[2];
                     alfa = factores[1];
                     tamaño = factores[3];
-                    ro = factores[4];
                 }
-
             }
         }
         if (cont2 == 0) {
             return false;
         } else {
-            System.out.println(ro);
-            System.out.println(alfa);
+            ro = ro(list, alfa);
             return true;
         }
     }
@@ -376,6 +359,23 @@ public class main extends javax.swing.JFrame {
             k = k.link;
         }
         return r;
+    }
+
+    ArrayList<String> ro(ArrayList<String> list, String alfa) {
+        ArrayList<String> ro = new ArrayList();
+        int lengt;
+        for (String l : list) {
+            lengt = l.length();
+            if (lengt > 3 + alfa.length()) {
+                if (!l.substring(3, 3+alfa.length()).equals(alfa)) {
+                    ro.add(l);
+                }
+            }else{
+                ro.add(l);
+            }
+
+        }
+        return ro;
     }
 
 
