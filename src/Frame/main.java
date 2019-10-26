@@ -23,9 +23,12 @@ public class main extends javax.swing.JFrame {
      */
     File file;
     Nodo ptr;
-    String[][] primas;
+    String[][] primas = new String[27][2];
+    ;
     ArrayList<Character> probadas = new ArrayList();
     int indice = 0;
+    int indice2 = 0;
+    int indice3 = 0;
 
     public main() {
         initComponents();
@@ -123,7 +126,7 @@ public class main extends javax.swing.JFrame {
             }
         }
     }
-
+    
     public void agregar_prod2(String p) {
         String nt = p.substring(0, 1);
         if (ptr == null) {
@@ -139,6 +142,18 @@ public class main extends javax.swing.JFrame {
         }
     }
 
+    public void rapartir() {
+        Nodo k = ptr;
+        while(k != null){
+            for(int i = 0; i < k.getProd().length(); i++){
+                if(Character.isUpperCase(k.getProd().charAt(i))){
+                    dame_prima(k.getProd().charAt(i));
+                }
+            }
+            k = k.link;
+        }
+    }
+
     public void mostrar_prod() {
         Nodo p = ptr;
         String prueba;
@@ -148,7 +163,7 @@ public class main extends javax.swing.JFrame {
 
             }
             if (!probadas.contains(p.getProd().charAt(0))) {
-                System.out.println(hay_fact(p.getProd()));
+                hay_fact(p.getProd());
             }
             System.out.println(p.getProd());
             p = p.link;
@@ -241,9 +256,9 @@ public class main extends javax.swing.JFrame {
     public void elim_rec2(Nodo p) {
         String prod = p.getProd();
         String alfa = p.getProd().substring(4, p.getProd().length());
-        String prima = dame_prima(p.getProd());
+        String prima = dame_prima(p.getProd().charAt(0));
         agregar_prima(p.getProd(), prima);
-        if (ya_e(prod)) {
+        if(ya_e(prima)){
             agregar_prod2(prima + "->&");
         }
         primas[indice][0] = p.getProd().substring(0, 1);
@@ -253,13 +268,12 @@ public class main extends javax.swing.JFrame {
     }
 
     boolean ya_e(String p) {
-        int i = 0;
-        while (i < primas.length) {
-            if (p.substring(0, 1).equals(primas[i][0])) {
+        Nodo k = ptr;
+        while(k != null){
+            if(k.getProd().equals(p.charAt(0)+"->&")){
                 return false;
-            } else {
-                i++;
             }
+            k = k.link;
         }
         return true;
     }
@@ -275,35 +289,51 @@ public class main extends javax.swing.JFrame {
         }
     }
 
-    String dame_prima(String p) {
+    String dame_prima(char p) {
         String[] abecedario = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
         Nodo k = ptr;
-        int j = 0, t = primas.length;
-        int i = 0;
+        int j = 0, t = primas.length, y = 0;
         String prima, prueba1, prueba2;
-        while (j < primas.length) {
-            if (p.substring(0, 1).equals(primas[j][0])) {
+        while (j < indice2) {
+            if (Character.toString(p).equals(primas[j][0])) {
                 return primas[j][1];
             } else {
                 j++;
             }
         }
-        while (k != null) {
-            if (k.getProd().substring(0, 1).equals(abecedario[i])) {
-                i++;
-            } else {
+        String pureba;
+        while (k != null){
+            y = indice3;
+            for (int i = 0; i < k.getProd().length(); i++) {
+                pureba = Character.toString(k.getProd().charAt(i));
+                prueba2 = abecedario[indice3];
+                if (Character.toString(k.getProd().charAt(i)).equals(abecedario[indice3])) {
+                    indice3++;
+                    break;
+                }
+            }
+            if(y == indice3 -1){
+                k = ptr;
+            }else{
                 k = k.link;
             }
         }
-        return abecedario[i];
+        primas[indice2][0] = Character.toString(p);
+        primas[indice2][1] = abecedario[indice3];
+        indice2++;
+        indice3++;
+        return abecedario[indice2 - 1];
     }
 
     boolean hay_fact(String p) {
+        String prima;
         int i, cont = 0, cont2 = 0, j = 0;
         probadas.add(p.charAt(0));
         ArrayList<String> fact = new ArrayList<>();
         ArrayList<String> list = a_comparar(p);
         ArrayList<String> ro;
+        ArrayList<String> beta;
+        ArrayList<ArrayList<String>> r = new ArrayList();
         String prueba, alfa = null, mayor = "0", tamaño = "0";
         for (String k : list) {
             i = k.length();
@@ -344,7 +374,10 @@ public class main extends javax.swing.JFrame {
         if (cont2 == 0) {
             return false;
         } else {
-            ro = ro(list, alfa);
+            r = ro(list, alfa);
+            ro = r.get(0);
+            beta = r.get(1);
+            quitar_fact(p, ro, beta, alfa);
             return true;
         }
     }
@@ -361,21 +394,68 @@ public class main extends javax.swing.JFrame {
         return r;
     }
 
-    ArrayList<String> ro(ArrayList<String> list, String alfa) {
+    public void quitar_fact(String prod, ArrayList<String> ro, ArrayList<String> beta, String alfa) {
+        Nodo k = ptr;
+        Nodo i = null, ant = null;
+        int primero = 0;
+        String prima;
+        while (k != null) {
+            if (k.getProd().charAt(0) == prod.charAt(0)) {
+                if (primero == 0) {
+                    i = k;
+                    primero++;
+                    ant = k;
+                    k = k.link;
+                } else {
+                    ant.link = k.link;
+                    k = null;
+                    k = ant.link;
+                }
+            } else {
+                k = k.link;
+            }
+        }
+        prima = dame_prima(prod.charAt(0));
+        i.setProd(prod.charAt(0) + "->" + alfa + prima);
+        Nodo temp = i.link;
+        for (String ri : ro) {
+            Nodo t1 = new Nodo(ri);
+            i.link = t1;
+            i = i.link;
+        }
+        for (String bi : beta) {
+            Nodo t1 = new Nodo(prima + "->" + bi);
+            i.link = t1;
+            i = i.link;
+        }
+        i.link = temp;
+    }
+
+    ArrayList<ArrayList<String>> ro(ArrayList<String> list, String alfa) {
         ArrayList<String> ro = new ArrayList();
+        ArrayList<String> beta = new ArrayList();
+        ArrayList<ArrayList<String>> r = new ArrayList();
         int lengt;
         for (String l : list) {
             lengt = l.length();
-            if (lengt > 3 + alfa.length()) {
-                if (!l.substring(3, 3+alfa.length()).equals(alfa)) {
+            if (lengt >= 3 + alfa.length()) {
+                if (!l.substring(3, 3 + alfa.length()).equals(alfa)) {
                     ro.add(l);
+                } else {
+                    if (l.substring(3 + alfa.length(), l.length()).equals("")) {
+                        beta.add("&");
+                    } else {
+                        beta.add(l.substring(3 + alfa.length(), l.length()));
+                    }
                 }
-            }else{
+            } else {
                 ro.add(l);
             }
-
         }
-        return ro;
+        r.add(ro);
+        r.add(beta);
+
+        return r;
     }
 
 
@@ -394,7 +474,7 @@ public class main extends javax.swing.JFrame {
                     agregar_prod2(line);
                     line = reader.readLine();
                 }
-                primas = new String[tamaño()][2];
+                rapartir();
                 mostrar_prod();
             } catch (Exception e) {
                 System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
