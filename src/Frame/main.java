@@ -24,8 +24,10 @@ public class main extends javax.swing.JFrame {
     File file;
     Nodo ptr;
     String[][] primas = new String[27][2];
-    ;
     ArrayList<Character> probadas = new ArrayList();
+    ArrayList<String> cp = new ArrayList();
+    ArrayList<String> primeros = new ArrayList();
+    ArrayList<String> p_ex = new ArrayList();
     int indice = 0;
     int indice2 = 0;
     int indice3 = 0;
@@ -45,6 +47,12 @@ public class main extends javax.swing.JFrame {
 
         jButton1 = new javax.swing.JButton();
         file_path = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        gramatica = new javax.swing.JTextArea();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        primera = new javax.swing.JTextArea();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -55,16 +63,41 @@ public class main extends javax.swing.JFrame {
             }
         });
 
+        gramatica.setColumns(20);
+        gramatica.setRows(5);
+        jScrollPane1.setViewportView(gramatica);
+
+        jLabel1.setText("Gramatica:");
+
+        primera.setColumns(20);
+        primera.setRows(5);
+        jScrollPane2.setViewportView(primera);
+
+        jLabel2.setText("Primera posicion:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addComponent(jButton1)
-                .addGap(18, 18, 18)
-                .addComponent(file_path, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(266, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(18, 18, 18)
+                        .addComponent(file_path, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(71, 71, 71)
+                                .addComponent(jLabel2))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(50, 50, 50)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(84, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -73,7 +106,15 @@ public class main extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(file_path, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(555, Short.MAX_VALUE))
+                .addGap(11, 11, 11)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1))
+                .addContainerGap(341, Short.MAX_VALUE))
         );
 
         pack();
@@ -126,7 +167,7 @@ public class main extends javax.swing.JFrame {
             }
         }
     }
-    
+
     public void agregar_prod2(String p) {
         String nt = p.substring(0, 1);
         if (ptr == null) {
@@ -144,9 +185,9 @@ public class main extends javax.swing.JFrame {
 
     public void rapartir() {
         Nodo k = ptr;
-        while(k != null){
-            for(int i = 0; i < k.getProd().length(); i++){
-                if(Character.isUpperCase(k.getProd().charAt(i))){
+        while (k != null) {
+            for (int i = 0; i < k.getProd().length(); i++) {
+                if (Character.isUpperCase(k.getProd().charAt(i))) {
                     dame_prima(k.getProd().charAt(i));
                 }
             }
@@ -165,7 +206,8 @@ public class main extends javax.swing.JFrame {
             if (!probadas.contains(p.getProd().charAt(0))) {
                 hay_fact(p.getProd());
             }
-            System.out.println(p.getProd());
+            gramatica.append(p.getProd());
+            gramatica.append(System.getProperty("line.separator"));
             p = p.link;
         }
     }
@@ -258,7 +300,7 @@ public class main extends javax.swing.JFrame {
         String alfa = p.getProd().substring(4, p.getProd().length());
         String prima = dame_prima(p.getProd().charAt(0));
         agregar_prima(p.getProd(), prima);
-        if(ya_e(prima)){
+        if (ya_e(prima)) {
             agregar_prod2(prima + "->&");
         }
         primas[indice][0] = p.getProd().substring(0, 1);
@@ -269,8 +311,8 @@ public class main extends javax.swing.JFrame {
 
     boolean ya_e(String p) {
         Nodo k = ptr;
-        while(k != null){
-            if(k.getProd().equals(p.charAt(0)+"->&")){
+        while (k != null) {
+            if (k.getProd().equals(p.charAt(0) + "->&")) {
                 return false;
             }
             k = k.link;
@@ -302,7 +344,7 @@ public class main extends javax.swing.JFrame {
             }
         }
         String pureba;
-        while (k != null){
+        while (k != null) {
             y = indice3;
             for (int i = 0; i < k.getProd().length(); i++) {
                 pureba = Character.toString(k.getProd().charAt(i));
@@ -312,9 +354,9 @@ public class main extends javax.swing.JFrame {
                     break;
                 }
             }
-            if(y == indice3 -1){
+            if (y == indice3 - 1) {
                 k = ptr;
-            }else{
+            } else {
                 k = k.link;
             }
         }
@@ -458,6 +500,144 @@ public class main extends javax.swing.JFrame {
         return r;
     }
 
+    String dame_pM(char p) {
+        String res = "";
+        int i = 0;
+        int tp;
+        for (String t : cp) {
+            tp = t.indexOf("cris");
+            if (t.charAt(0) == p) {
+                if (i == 0) {
+                    res = t.substring(tp + 4, t.length());
+                    i++;
+                } else {
+                    res = res + "cris" + t.substring(tp + 4, t.length());
+                }
+            }
+        }
+        return res;
+    }
+
+    boolean produce_e(char c) {
+        Nodo k = ptr;
+        while (k != null) {
+            if (k.getProd().charAt(0) == c) {
+                if (k.getProd().equals(c + "->&")) {
+                    return true;
+                }
+            }
+            k = k.link;
+        }
+        return false;
+    }
+
+    public void primero() {
+        Nodo k = ptr;
+        int i = 0, tp, in = 3;
+        String cab;
+        String g, rep, prod = "", ee = "";
+        char prueba;
+        while (k != null) {
+            cp.add(k.getProd() + "cris" + unprimero(k.getProd()));
+            k = k.link;
+        }
+        for (int j = 0; j < cp.size(); j++) {
+            tp = cp.get(j).indexOf("cris");
+            i = tp + 4;
+            while (i < cp.get(j).length()) {
+                prueba = cp.get(j).charAt(i);
+                if (Character.isUpperCase(cp.get(j).charAt(i))) {
+                    if (produce_e(cp.get(j).charAt(i))) {
+                        prod = cp.get(j).substring(0, tp);
+                        while (in < prod.length()) {
+                            if (prod.charAt(in - 1) == cp.get(j).charAt(i)) {
+                                ee = Character.toString(prod.charAt(in));
+                                break;
+                            }
+                            in++;
+                        }
+                    }
+                    cab = Character.toString(cp.get(j).charAt(i));
+                    rep = cp.get(j).substring(tp, cp.get(j).length());
+                    g = rep.replace(cab, dame_pM(cp.get(j).charAt(i)));
+                    g = cp.get(j).substring(0, tp) + g;
+                    if (!ee.equals("")) {
+                        g = g + "cris" + ee;
+                    }
+                    ee = "";
+                    cp.set(j, g);
+                    j = -1;
+                    break;
+                }
+                i = i + 5;
+            }
+        }
+    }
+
+    String unprimero(String w) {
+        Nodo k = ptr;
+        String res, tt;
+        char cab;
+        int i = 3;
+        String prueba2;
+        while (k != null) {
+            if (k.getProd().equals(w)) {
+                res = k.getProd().substring(3, 4);
+                cab = k.getProd().charAt(3);
+                if (Character.isUpperCase(cab)) {
+                    while (produce_e(cab) && i + 1 < k.getProd().length()) {
+                        res = res + "cris" + k.getProd().substring(i + 1, i + 2);
+                        i++;
+                        cab = k.getProd().charAt(i);
+                    }
+                }
+                return res;
+            }
+            k = k.link;
+        }
+        return "nadaaaa";
+    }
+
+    public void mostrar_p() {
+        ArrayList<String> r = cabezas();
+        String m = "";
+        String d[];
+        int i = 0, j = 1;
+        for (String c : r) {
+            m = c;
+            for (String p : cp) {
+                if (c.equals(p.substring(0, 1))) {
+                    d = p.split("cris");
+                    j = 1;
+                    while (j < d.length) {
+                        if (!m.contains(d[j])) {
+                            if (i == 0) {
+                                m = m + "  " + d[j];
+                                i++;
+                            } else {
+                                m = m + "  " + d[j];
+                            }
+                        }
+                        j++;
+                    }
+                }
+            }
+            primera.append(m);
+            primera.append(System.getProperty("line.separator"));
+        }
+
+    }
+
+    ArrayList<String> cabezas() {
+        ArrayList<String> r = new ArrayList();
+        for (String p : cp) {
+            if (!r.contains(p.substring(0, 1))) {
+                r.add(p.substring(0, 1));
+            }
+        }
+        return r;
+    }
+
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         JFileChooser chooser = new JFileChooser();
@@ -476,6 +656,13 @@ public class main extends javax.swing.JFrame {
                 }
                 rapartir();
                 mostrar_prod();
+                primero();
+                mostrar_p();
+                System.out.println("-----------------");
+                for(String f: cp){
+                    System.out.println(f);
+                }
+                System.out.println("-----------------");
             } catch (Exception e) {
                 System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
                 System.out.println(e.toString());
@@ -520,6 +707,12 @@ public class main extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField file_path;
+    private javax.swing.JTextArea gramatica;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextArea primera;
     // End of variables declaration//GEN-END:variables
 }
