@@ -28,6 +28,7 @@ public class main extends javax.swing.JFrame {
     ArrayList<String> cp = new ArrayList();
     ArrayList<String> primeros = new ArrayList();
     ArrayList<String> p_ex = new ArrayList();
+    ArrayList<String> sgts = new ArrayList();
     int indice = 0;
     int indice2 = 0;
     int indice3 = 0;
@@ -53,6 +54,9 @@ public class main extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         primera = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        sgt = new javax.swing.JTextArea();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -75,6 +79,12 @@ public class main extends javax.swing.JFrame {
 
         jLabel2.setText("Primera posicion:");
 
+        sgt.setColumns(20);
+        sgt.setRows(5);
+        jScrollPane3.setViewportView(sgt);
+
+        jLabel3.setText("Siguiente posicion:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -86,17 +96,21 @@ public class main extends javax.swing.JFrame {
                         .addComponent(jButton1)
                         .addGap(18, 18, 18)
                         .addComponent(file_path, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel1)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(71, 71, 71)
+                                    .addComponent(jLabel2))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(50, 50, 50)
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(71, 71, 71)
-                                .addComponent(jLabel2))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(50, 50, 50)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addComponent(jLabel3)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(84, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -114,7 +128,11 @@ public class main extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
                     .addComponent(jScrollPane1))
-                .addContainerGap(341, Short.MAX_VALUE))
+                .addGap(28, 28, 28)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(140, Short.MAX_VALUE))
         );
 
         pack();
@@ -206,6 +224,7 @@ public class main extends javax.swing.JFrame {
             if (!probadas.contains(p.getProd().charAt(0))) {
                 hay_fact(p.getProd());
             }
+            System.out.println(p.getProd());
             gramatica.append(p.getProd());
             gramatica.append(System.getProperty("line.separator"));
             p = p.link;
@@ -531,6 +550,17 @@ public class main extends javax.swing.JFrame {
         return false;
     }
 
+    boolean tppe(char c) {
+        for (String pp : cp) {
+            if (pp.substring(0, 1).equals(c)) {
+                if (pp.contains("&")) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public void primero() {
         Nodo k = ptr;
         int i = 0, tp, in = 3;
@@ -598,6 +628,170 @@ public class main extends javax.swing.JFrame {
         return "nadaaaa";
     }
 
+    public void sigueinte_p() {
+        int pos, pos2, j = 0;
+        String res = "";
+        String cup, temp;
+        char ca;
+        char prueba, prueba2;
+        ArrayList<String> cab = cabezas();
+        for (String c : cab) {
+            res = "";
+            Nodo k = ptr;
+            while (k != null) {
+                cup = k.getProd().substring(3, k.getProd().length());
+                while (cup.contains(c)) {
+                    pos = cup.indexOf(c);
+                    pos2 = cup.length();
+                    if (pos + 1 < cup.length()) {
+                        prueba2 = cup.charAt(cup.indexOf(c) + 1);
+                        if (Character.isUpperCase(cup.charAt(cup.indexOf(c) + 1))) {
+                            if (tppe(cup.charAt(cup.indexOf(c) + 1)) || produce_e(cup.charAt(cup.indexOf(c) + 1))) {
+                                if (res.equals("")) {
+                                    res = damepp(cup.charAt(cup.indexOf(c) + 1));
+                                } else {
+                                    res = res + "cris" + damepp(cup.charAt(cup.indexOf(c) + 1));
+                                }
+                                if (pos + 2 < cup.length()) {
+                                    j = pos + 2;
+                                    temp = res;
+                                    while (j < cup.length()) {
+                                        if (tppe(cup.charAt(j)) || produce_e(cup.charAt(j))) {
+                                            if (res.equals("")) {
+                                                res = damepp(cup.charAt(j));
+                                            } else {
+                                                res = res + "cris" + damepp(cup.charAt(j));
+                                            }
+                                            j++;
+                                        } else {
+                                            if (res.equals("")) {
+                                                res = "" + cup.charAt(j);
+                                            } else {
+                                                res = res + "cris" + cup.charAt(j);
+                                            }
+                                            break;
+                                        }
+                                    }
+                                    if (res.equals(temp)) {
+                                        if (c.charAt(0) != k.getProd().charAt(0)) {
+                                            if (res.equals("")) {
+                                                res = k.getProd().charAt(0) + "" + k.getProd().charAt(0);
+                                            } else {
+                                                res = res + "cris" + k.getProd().charAt(0) + k.getProd().charAt(0);
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    if (res.equals("")) {
+                                        res = k.getProd().charAt(0) + "" + k.getProd().charAt(0);
+                                    } else {
+                                        res = res + "cris" + k.getProd().charAt(0) + k.getProd().charAt(0);
+                                    }
+                                }
+                            } else {
+                                if (res.equals("")) {
+                                    res = Character.toString(cup.charAt(cup.indexOf(c) + 1));
+                                } else {
+                                    res = res + "cris" + Character.toString(cup.charAt(cup.indexOf(c) + 1));
+                                }
+                            }
+                        } else {
+                            if (res.equals("")) {
+                                res = Character.toString(cup.charAt(cup.indexOf(c) + 1));
+                            } else {
+                                res = res + "cris" + Character.toString(cup.charAt(cup.indexOf(c) + 1));
+                            }
+                        }
+                        prueba = cup.charAt(cup.indexOf(c));
+                    } else {
+                        if (c.charAt(0) != k.getProd().charAt(0)) {
+                            if (res.equals("")) {
+                                res = k.getProd().charAt(0) + "" + k.getProd().charAt(0);
+                            } else {
+                                res = res + "cris" + k.getProd().charAt(0) + k.getProd().charAt(0);
+                            }
+                        }
+                    }
+                    cup = cup.substring(cup.indexOf(c) + 1, cup.length());
+                }
+                k = k.link;
+            }
+            sgts.add(c + "cris" + res);
+        }
+    }
+
+    String damesp(char c) {
+        int pos;
+        String res = "";
+        for (String sp : sgts) {
+            if (c == sp.charAt(0)) {
+                pos = sp.indexOf("cris") + 4;
+                if (res.equals("")) {
+                    res = sp.substring(pos, sp.length());
+                } else {
+                    res = res + "cris" + sp.substring(pos, sp.length());
+                }
+            }
+        }
+        return res;
+    }
+
+    String damepp(char c) {
+        int pos;
+        String res = "";
+        for (String pp : cp) {
+            if (c == pp.charAt(0)) {
+                pos = pp.indexOf("cris") + 4;
+                if (res.equals("")) {
+                    res = pp.substring(pos, pp.length());
+                } else {
+                    res = res + "cris" + pp.substring(pos, pp.length());
+                }
+            }
+        }
+        return res;
+    }
+
+    public void ter_sgts() {
+        String[] s;
+        String res, g;
+        boolean cambio = false;
+        for (int i = 0; i < sgts.size(); i++) {
+            if (i == 0) {
+                cambio = false;
+            }
+            s = sgts.get(i).split("cris");
+            for (int j = 1; j < s.length; j++) {
+                if (!s[j].equals("")) {
+                    if (Character.isUpperCase(s[j].charAt(0))) {
+                        if (s[j].length() == 1) {
+                            res = damepp(s[j].charAt(0));
+                            g = sgts.get(i).replace(s[j], res);
+                            sgts.set(i, g);
+                            cambio = true;
+                        } else {
+                            if (s[j].length() == 2) {
+                                if (s[j].charAt(0) == sgts.get(i).charAt(0)) {
+                                    g = sgts.get(i).replace(s[j], "");
+                                    sgts.set(i, g);
+                                    cambio = true;
+                                } else {
+                                    res = damesp(s[j].charAt(0));
+                                    g = sgts.get(i).replace(s[j], res);
+                                    sgts.set(i, g);
+                                    cambio = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (i == sgts.size() - 1 && cambio) {
+                i = -1;
+            }
+        }
+    }
+
     public void mostrar_p() {
         ArrayList<String> r = cabezas();
         String m = "";
@@ -624,6 +818,35 @@ public class main extends javax.swing.JFrame {
             }
             primera.append(m);
             primera.append(System.getProperty("line.separator"));
+        }
+    }
+
+    public void mostrar_s() {
+        String d[];
+        int i = 0,j = 1;
+        String m = "";
+        ArrayList<String> r = cabezas();
+        for (String c : r) {
+            m = c;
+            for (String s : sgts) {
+                if (c.equals(s.substring(0, 1))) {
+                    d = s.split("cris");
+                    j = 1;
+                    while (j < d.length) {
+                        if (!m.contains(d[j]) && !d[j].equals("&")) {
+                            if (i == 0) {
+                                m = m + "  " + d[j];
+                                i++;
+                            } else {
+                                m = m + "  " + d[j];
+                            }
+                        }
+                        j++;
+                    }
+                }
+            }
+            sgt.append(m);
+            sgt.append(System.getProperty("line.separator"));
         }
 
     }
@@ -658,11 +881,10 @@ public class main extends javax.swing.JFrame {
                 mostrar_prod();
                 primero();
                 mostrar_p();
-                System.out.println("-----------------");
-                for(String f: cp){
-                    System.out.println(f);
-                }
-                System.out.println("-----------------");
+                sigueinte_p();
+                ter_sgts();
+                mostrar_s();
+                System.out.println("");
             } catch (Exception e) {
                 System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
                 System.out.println(e.toString());
@@ -711,8 +933,11 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextArea primera;
+    private javax.swing.JTextArea sgt;
     // End of variables declaration//GEN-END:variables
 }
