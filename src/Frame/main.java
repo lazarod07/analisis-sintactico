@@ -770,6 +770,17 @@ public class main extends javax.swing.JFrame {
         }
         return res;
     }
+    
+    ArrayList dameppcp(char c) {
+        ArrayList<String> res = new ArrayList<>();
+        int pos;
+        for (String pp : cp) {
+            if (c == pp.charAt(0)) {
+                res.add(pp);
+            }
+        }
+        return res;
+    }
 
     public void ter_sgts() {
         String[] s;
@@ -902,20 +913,35 @@ public class main extends javax.swing.JFrame {
     
     public void tablaM(){
         ArrayList<String> ter = term();
+        ArrayList<String> pp;
         ArrayList<String> noter = cabezas();
         DefaultTableModel modelo = new DefaultTableModel();
         String [][] tm = new String [noter.size()+1][ter.size()+2];
         String [] col = new String[ter.size()+2];
         String [] fila = new String[noter.size()+1];
         modelo.addColumn("");
+        String ppsc;
         for (int i = 0; i < ter.size(); i++) {
             tm[0][i+1] = ter.get(i);
             modelo.addColumn(ter.get(i));
         }
         modelo.addColumn("$");
         for (int i = 0; i < noter.size(); i++) {
+            tm[i+1][0] = noter.get(i);
             fila[0] = noter.get(i);
             modelo.addRow(fila);
+        }
+        for (int i = 0; i < noter.size(); i++) {
+            pp = dameppcp(noter.get(i).charAt(0));
+            for (int j = 0; j < ter.size(); j++) {
+                for(String cu: pp){
+                    ppsc = cu.substring(cu.indexOf("cris")+4, cu.length());
+                    if(ppsc.contains(ter.get(j))){
+                        tm[i+1][j+1] = cu.substring(0, cu.indexOf("cris"));
+                        modelo.setValueAt(cu.substring(0, cu.indexOf("cris")), i+1, j+1);
+                    }
+                }
+            }
         }
         
         tbm.setModel(modelo);
