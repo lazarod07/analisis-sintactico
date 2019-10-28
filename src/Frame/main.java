@@ -115,20 +115,19 @@ public class main extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(71, 71, 71)
-                                        .addComponent(jLabel2))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(50, 50, 50)
-                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
-                .addContainerGap(84, Short.MAX_VALUE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel1)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(71, 71, 71)
+                                    .addComponent(jLabel2))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(50, 50, 50)
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -654,6 +653,7 @@ public class main extends javax.swing.JFrame {
         char ca;
         char prueba, prueba2;
         ArrayList<String> cab = cabezas();
+        int peso = 0;
         for (String c : cab) {
             res = "";
             Nodo k = ptr;
@@ -735,7 +735,13 @@ public class main extends javax.swing.JFrame {
                 }
                 k = k.link;
             }
-            sgts.add(c + "cris" + res);
+            if(peso == 0){
+                sgts.add(c + "cris" + res+"cris$");
+                peso++;
+            }else{
+                sgts.add(c + "cris" + res);
+            }
+            
         }
     }
 
@@ -770,7 +776,7 @@ public class main extends javax.swing.JFrame {
         }
         return res;
     }
-    
+
     ArrayList dameppcp(char c) {
         ArrayList<String> res = new ArrayList<>();
         int pos;
@@ -853,7 +859,7 @@ public class main extends javax.swing.JFrame {
 
     public void mostrar_s() {
         String d[];
-        int i = 0,j = 1;
+        int i = 0, j = 1;
         String m = "";
         ArrayList<String> r = cabezas();
         for (String c : r) {
@@ -890,18 +896,18 @@ public class main extends javax.swing.JFrame {
         }
         return r;
     }
-    
-    ArrayList<String> term(){
+
+    ArrayList<String> term() {
         ArrayList<String> termi = new ArrayList();
         Nodo k = ptr;
         String p;
         char c;
-        while(k != null){
+        while (k != null) {
             p = k.getProd().substring(3, k.getProd().length());
             for (int i = 3; i < k.getProd().length(); i++) {
                 c = k.getProd().charAt(i);
-                if(!Character.isUpperCase(c)){
-                    if(!termi.contains(Character.toString(c))){
+                if (!Character.isUpperCase(c) && c != "&".charAt(0)) {
+                    if (!termi.contains(Character.toString(c))) {
                         termi.add(Character.toString(c));
                     }
                 }
@@ -910,43 +916,70 @@ public class main extends javax.swing.JFrame {
         }
         return termi;
     }
-    
-    public void tablaM(){
+
+    public void tablaM() {
         ArrayList<String> ter = term();
         ArrayList<String> pp;
         ArrayList<String> noter = cabezas();
         DefaultTableModel modelo = new DefaultTableModel();
-        String [][] tm = new String [noter.size()+1][ter.size()+2];
-        String [] col = new String[ter.size()+2];
-        String [] fila = new String[noter.size()+1];
+        String[][] tm = new String[noter.size() + 1][ter.size() + 2];
+        String[] col = new String[ter.size() + 2];
+        String[] fila = new String[noter.size() + 1];
+        String[] csp;
         modelo.addColumn("");
-        String ppsc;
+        String ppsc, sp, rep;
+        int pos;
         for (int i = 0; i < ter.size(); i++) {
-            tm[0][i+1] = ter.get(i);
+            tm[0][i + 1] = ter.get(i);
             modelo.addColumn(ter.get(i));
         }
         modelo.addColumn("$");
+        tm[0][ter.size() + 1] = "$";
         for (int i = 0; i < noter.size(); i++) {
-            tm[i+1][0] = noter.get(i);
+            tm[i + 1][0] = noter.get(i);
             fila[0] = noter.get(i);
             modelo.addRow(fila);
         }
         for (int i = 0; i < noter.size(); i++) {
             pp = dameppcp(noter.get(i).charAt(0));
             for (int j = 0; j < ter.size(); j++) {
-                for(String cu: pp){
-                    ppsc = cu.substring(cu.indexOf("cris")+4, cu.length());
-                    if(ppsc.contains(ter.get(j))){
-                        tm[i+1][j+1] = cu.substring(0, cu.indexOf("cris"));
-                        modelo.setValueAt(cu.substring(0, cu.indexOf("cris")), i+1, j+1);
+                for (String cu : pp) {
+                    ppsc = cu.substring(cu.indexOf("cris") + 4, cu.length());
+                    if (ppsc.contains(ter.get(j))) {
+                        if (ppsc.equals("&")) {
+                            sp = damesp(noter.get(i).charAt(0));
+                            csp = sp.split("cris");
+                            rep = "";
+                            for (int k = 0; k < csp.length; k++) {
+                                if (!rep.contains(csp[k])) {
+                                    pos = postm(tm, csp[k].charAt(0), ter.size() + 2);
+                                    modelo.setValueAt(cu.substring(0, cu.indexOf("cris")), i, pos);
+                                }
+                            }
+                        } else {
+                            tm[i + 1][j + 1] = cu.substring(0, cu.indexOf("cris"));
+                            modelo.setValueAt(cu.substring(0, cu.indexOf("cris")), i, j + 1);
+                        }
                     }
                 }
             }
         }
-        
+
         tbm.setModel(modelo);
     }
-            
+
+    int postm(String[][] tm, char t, int lim) {
+        for (int i = 0; i < lim; i++) {
+            if (i != 0) {
+                if (t == tm[0][i].charAt(0)) {
+                    return i;
+                }
+            }
+
+        }
+        return -1;
+    }
+
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         JFileChooser chooser = new JFileChooser();
