@@ -6,14 +6,12 @@
 package Frame;
 
 import Lista.Nodo;
-import com.sun.org.apache.bcel.internal.generic.AALOAD;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 /**
  *
@@ -735,13 +733,13 @@ public class main extends javax.swing.JFrame {
                 }
                 k = k.link;
             }
-            if(peso == 0){
-                sgts.add(c + "cris" + res+"cris$");
+            if (peso == 0) {
+                sgts.add(c + "cris" + res + "cris$");
                 peso++;
-            }else{
+            } else {
                 sgts.add(c + "cris" + res);
             }
-            
+
         }
     }
 
@@ -906,7 +904,7 @@ public class main extends javax.swing.JFrame {
             p = k.getProd().substring(3, k.getProd().length());
             for (int i = 3; i < k.getProd().length(); i++) {
                 c = k.getProd().charAt(i);
-                if (!Character.isUpperCase(c) && c != "&".charAt(0)) {
+                if (!Character.isUpperCase(c)) {
                     if (!termi.contains(Character.toString(c))) {
                         termi.add(Character.toString(c));
                     }
@@ -922,19 +920,23 @@ public class main extends javax.swing.JFrame {
         ArrayList<String> pp;
         ArrayList<String> noter = cabezas();
         DefaultTableModel modelo = new DefaultTableModel();
-        String[][] tm = new String[noter.size() + 1][ter.size() + 2];
-        String[] col = new String[ter.size() + 2];
+        String[][] tm = new String[noter.size() + 1][ter.size() + 1];
+        String[] col = new String[ter.size() + 1];
         String[] fila = new String[noter.size() + 1];
         String[] csp;
         modelo.addColumn("");
         String ppsc, sp, rep;
         int pos;
+        int pos2 = 0;
         for (int i = 0; i < ter.size(); i++) {
-            tm[0][i + 1] = ter.get(i);
-            modelo.addColumn(ter.get(i));
+            if (!ter.get(i).equals("&")) {
+                tm[0][pos2 + 1] = ter.get(i);
+                modelo.addColumn(ter.get(i));
+                pos2++;
+            }
         }
         modelo.addColumn("$");
-        tm[0][ter.size() + 1] = "$";
+        tm[0][ter.size()] = "$";
         for (int i = 0; i < noter.size(); i++) {
             tm[i + 1][0] = noter.get(i);
             fila[0] = noter.get(i);
@@ -946,14 +948,16 @@ public class main extends javax.swing.JFrame {
                 for (String cu : pp) {
                     ppsc = cu.substring(cu.indexOf("cris") + 4, cu.length());
                     if (ppsc.contains(ter.get(j))) {
-                        if (ppsc.equals("&")) {
+                        if (ter.get(j).equals("&")) {
                             sp = damesp(noter.get(i).charAt(0));
                             csp = sp.split("cris");
                             rep = "";
                             for (int k = 0; k < csp.length; k++) {
                                 if (!rep.contains(csp[k])) {
-                                    pos = postm(tm, csp[k].charAt(0), ter.size() + 2);
-                                    modelo.setValueAt(cu.substring(0, cu.indexOf("cris")), i, pos);
+                                    if (csp[k].charAt(0) != "&".charAt(0)) {
+                                        pos = postm(tm, csp[k].charAt(0), ter.size() + 2);
+                                        modelo.setValueAt(cu.substring(0, cu.indexOf("cris")), i, pos);
+                                    }
                                 }
                             }
                         } else {
