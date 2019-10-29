@@ -23,16 +23,18 @@ public class main extends javax.swing.JFrame {
      * Creates new form main
      */
     File file;
-    Nodo ptr;
+    Nodo ptr, ptr2;
     String[][] primas = new String[27][2];
     ArrayList<Character> probadas = new ArrayList();
     ArrayList<String> cp = new ArrayList();
     ArrayList<String> primeros = new ArrayList();
     ArrayList<String> p_ex = new ArrayList();
     ArrayList<String> sgts = new ArrayList();
+    ArrayList<String> ordn = new ArrayList();
     int indice = 0;
     int indice2 = 0;
     int indice3 = 0;
+    String inicial;
 
     public main() {
         initComponents();
@@ -60,6 +62,12 @@ public class main extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tbm = new javax.swing.JTable();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        trecon = new javax.swing.JTable();
+        cadena = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -98,6 +106,35 @@ public class main extends javax.swing.JFrame {
         ));
         jScrollPane4.setViewportView(tbm);
 
+        trecon.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Pila", "Entrada", "Salida"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane5.setViewportView(trecon);
+
+        jLabel4.setText("Cadena a reconocer: ");
+
+        jButton2.setText("Reconocer");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Tabla M: ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -108,24 +145,41 @@ public class main extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1)
                         .addGap(18, 18, 18)
-                        .addComponent(file_path, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(file_path, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel1)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(71, 71, 71)
-                                    .addComponent(jLabel2))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(50, 50, 50)
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(28, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(71, 71, 71)
+                                        .addComponent(jLabel2))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(50, 50, 50)
+                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(11, 11, 11)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel4)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(cadena, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(41, 41, 41)
+                                        .addComponent(jButton2)))
+                                .addGap(47, 47, 47))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -138,21 +192,101 @@ public class main extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
-                .addGap(28, 28, 28)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(47, 47, 47))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(cadena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton2))
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    public void ordenar() {
+        Nodo p = ptr;
+        String is, have;
+        while (p != null) {
+            if (!ordn.contains(p.getProd().substring(0, 1))) {
+                is = es_prima(p.getProd().charAt(0));
+                have = tiene_prima(p.getProd().charAt(0));
+                if (!is.equals("") || !have.equals("")) {
+                    if (!is.equals("")) {
+                        Nodo k = ptr;
+                        while (k != null) {
+                            if (k.getProd().charAt(0) == is.charAt(0)) {
+                                agregar_prod3(k.getProd());
+                                System.out.print(k.getProd());
+                                System.out.print("     ");
+                            }
+                            k = k.link;
+                        }
+                        k = ptr;
+                        while (k != null) {
+                            if (k.getProd().charAt(0) == p.getProd().charAt(0)) {
+                                agregar_prod3(k.getProd());
+                                System.out.print(k.getProd());
+                                System.out.print("     ");
+                            }
+                            k = k.link;
+                        }
+                        ordn.add(is.substring(0, 1));
+                        ordn.add(p.getProd().substring(0, 1));
+                    } else {
+                        Nodo k = ptr;
+                        while (k != null) {
+                            if (k.getProd().charAt(0) == p.getProd().charAt(0)) {
+                                agregar_prod3(k.getProd());
+                                System.out.print(k.getProd());
+                                System.out.print("     ");
+                            }
+                            k = k.link;
+                        }
+                        k = ptr;
+                        while (k != null) {
+                            if (k.getProd().charAt(0) == have.charAt(0)) {
+                                agregar_prod3(k.getProd());
+                                System.out.print(k.getProd());
+                                System.out.print("     ");
+                            }
+                            k = k.link;
+                        }
+                        ordn.add(have.substring(0, 1));
+                        ordn.add(p.getProd().substring(0, 1));
+                    }
+                } else {
+                    Nodo k = ptr;
+                    while (k != null) {
+                        if (k.getProd().charAt(0) == p.getProd().charAt(0)) {
+                            agregar_prod3(k.getProd());
+                            System.out.print(k.getProd());
+                            System.out.print("     ");
+                        }
+                        k = k.link;
+                    }
+                    ordn.add(p.getProd().substring(0, 1));
+                }
+            }
+            p = p.link;
+        }
+    }
 
     String tienerecursividad(String p) {
         String cab = p.substring(0, 1);
@@ -207,8 +341,25 @@ public class main extends javax.swing.JFrame {
         if (ptr == null) {
             Nodo c = new Nodo(p);
             ptr = c;
+            inicial = ptr.getProd().substring(0, 1);
         } else {
             Nodo k = ptr;
+            while (k.link != null) {
+                k = k.link;
+            }
+            Nodo n = new Nodo(p);
+            k.link = n;
+        }
+    }
+
+    public void agregar_prod3(String p) {
+        String nt = p.substring(0, 1);
+        if (ptr2 == null) {
+            Nodo c = new Nodo(p);
+            ptr2 = c;
+            inicial = ptr2.getProd().substring(0, 1);
+        } else {
+            Nodo k = ptr2;
             while (k.link != null) {
                 k = k.link;
             }
@@ -240,7 +391,8 @@ public class main extends javax.swing.JFrame {
             if (!probadas.contains(p.getProd().charAt(0))) {
                 hay_fact(p.getProd());
             }
-            System.out.println(p.getProd());
+            System.out.print(p.getProd());
+            System.out.print("   ");
             gramatica.append(p.getProd());
             gramatica.append(System.getProperty("line.separator"));
             p = p.link;
@@ -733,9 +885,8 @@ public class main extends javax.swing.JFrame {
                 }
                 k = k.link;
             }
-            if (peso == 0) {
+            if (c.equals(inicial)) {
                 sgts.add(c + "cris" + res + "cris$");
-                peso++;
             } else {
                 sgts.add(c + "cris" + res);
             }
@@ -924,10 +1075,12 @@ public class main extends javax.swing.JFrame {
         String[] col = new String[ter.size() + 1];
         String[] fila = new String[noter.size() + 1];
         String[] csp;
+        String[] od = new String[ter.size()];
         modelo.addColumn("");
         String ppsc, sp, rep;
         int pos;
         int pos2 = 0;
+        int h = 1;
         for (int i = 0; i < ter.size(); i++) {
             if (!ter.get(i).equals("&")) {
                 tm[0][pos2 + 1] = ter.get(i);
@@ -955,6 +1108,7 @@ public class main extends javax.swing.JFrame {
                             for (int k = 0; k < csp.length; k++) {
                                 if (!rep.contains(csp[k])) {
                                     if (csp[k].charAt(0) != "&".charAt(0)) {
+                                        rep = rep + csp[k];
                                         pos = postm(tm, csp[k].charAt(0), ter.size() + 2);
                                         modelo.setValueAt(cu.substring(0, cu.indexOf("cris")), i, pos);
                                     }
@@ -968,8 +1122,33 @@ public class main extends javax.swing.JFrame {
                 }
             }
         }
-
+        Nodo k = ptr2;
+        String prueba;
+        String prueba1;
+        ArrayList<String> yaesta = new ArrayList<>();
+        int rr = 0, cc = 0;
+        while (k != null) {
+            if (!yaesta.contains(k.getProd().substring(0, 1))) {
+                h = 0;
+                while (h < noter.size()) {
+                    if (modelo.getValueAt(h, 0).equals(k.getProd().substring(0, 1))) {
+                        modelo.moveRow(h,h, rr);
+                        yaesta.add(k.getProd().substring(0, 1));
+                        rr++;
+                        break;
+                    }
+                    h++;
+                }
+            }
+            k = k.link;
+        }
         tbm.setModel(modelo);
+    }
+
+    String[] damefila(String[][] t, int tam, int nf) {
+        String[] res = new String[tam];
+        System.arraycopy(t[nf], 1, res, 1, tam - 1);
+        return res;
     }
 
     int postm(String[][] tm, char t, int lim) {
@@ -982,6 +1161,24 @@ public class main extends javax.swing.JFrame {
 
         }
         return -1;
+    }
+
+    String tiene_prima(char c) {
+        for (int i = 0; i < indice; i++) {
+            if (c == primas[i][0].charAt(0)) {
+                return primas[i][1].substring(0, 1);
+            }
+        }
+        return "";
+    }
+
+    String es_prima(char c) {
+        for (int i = 0; i < indice; i++) {
+            if (c == primas[i][1].charAt(0)) {
+                return primas[i][0].substring(0, 1);
+            }
+        }
+        return "";
     }
 
 
@@ -1002,19 +1199,82 @@ public class main extends javax.swing.JFrame {
                 }
                 rapartir();
                 mostrar_prod();
+                System.out.println("------------------");
+                ordenar();
                 primero();
                 mostrar_p();
                 sigueinte_p();
                 ter_sgts();
                 mostrar_s();
                 tablaM();
-                System.out.println("");
+
             } catch (Exception e) {
                 System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
                 System.out.println(e.toString());
             }
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    String mejorop(String e, String nt) {
+        Nodo k = ptr;
+        String temp;
+        for (int i = e.length() - 1; i > e.length() - 1; i--) {
+            temp = e.substring(0, i);
+            while (k != null) {
+                if (k.getProd().substring(3, k.getProd().length()).equals(temp)) {
+                    return k.getProd();
+                }
+                k = k.link;
+            }
+        }
+        return "";
+    }
+
+    String mejorop2(String e, String nt) {
+        Nodo k = ptr;
+        String temp = null;
+        int cont = 0, mayor = 0;
+        while (k != null) {
+            if (nt.equals(k.getProd().substring(0, 1))) {
+                cont = 0;
+                for (int i = 0; i < e.length(); i++) {
+                    if (k.getProd().substring(3, k.getProd().length()).contains(e.substring(i, i + 1))) {
+                        cont++;
+                    }
+                    if (cont >= mayor) {
+                        temp = k.getProd();
+                        mayor = cont;
+                    }
+                }
+            }
+            k = k.link;
+        }
+        return temp;
+    }
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        String cad = cadena.getText();
+        String mo;
+        int i = 0;
+        ArrayList<String> pila = new ArrayList();
+        ArrayList<String> entrada = new ArrayList();
+        ArrayList<String> salida = new ArrayList();
+        pila.add("$" + inicial);
+        entrada.add(cad + "$");
+        String prueba, prueba1;
+        while (!pila.get(i).equals("") && !entrada.get(i).equals("")) {
+            mo = mejorop2(entrada.get(i).substring(0, entrada.get(i).length() - 1), pila.get(i).substring(1, pila.get(i).length()));
+            if (mo.equals("")) {
+                salida.add("no aceptar");
+                break;
+            } else {
+                salida.add(mo);
+                i++;
+            }
+            pila.add(pila.get(i - 1).replace(pila.get(i).substring(1, pila.get(i).length()), mo));
+            entrada.add(entrada.get(i - 1));
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1052,18 +1312,24 @@ public class main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField cadena;
     private javax.swing.JTextField file_path;
     private javax.swing.JTextArea gramatica;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTextArea primera;
     private javax.swing.JTextArea sgt;
     private javax.swing.JTable tbm;
+    private javax.swing.JTable trecon;
     // End of variables declaration//GEN-END:variables
 }
