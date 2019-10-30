@@ -193,29 +193,27 @@ public class main extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(47, 47, 47))
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
                             .addComponent(cadena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton2))
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(24, 24, 24))))
+                        .addGap(42, 42, 42)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(1720, 1720, 1720))
         );
 
         pack();
@@ -1263,8 +1261,12 @@ public class main extends javax.swing.JFrame {
             if (modelo.getValueAt(i, 0).equals(nt)) {
                 while (j < colum) {
                     prueba = modelo.getColumnName(j);
-                    if (modelo.getColumnName(j).equals(t)) {
-                        return modelo.getValueAt(i, j).toString();
+                    try {
+                        if (modelo.getColumnName(j).equals(t)) {
+                            return modelo.getValueAt(i, j).toString();
+                        }
+                    } catch (Exception e) {
+                        return "";
                     }
                     j++;
                 }
@@ -1276,6 +1278,9 @@ public class main extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         DefaultTableModel modelo = (DefaultTableModel) trecon.getModel();
+        while (modelo.getRowCount() > 0) {
+            modelo.removeRow(0);
+        }
         StringBuilder q;
         String entrada = cadena.getText() + "$";
         String salida;
@@ -1283,27 +1288,41 @@ public class main extends javax.swing.JFrame {
         Stack<String> pila = new Stack<String>();
         pila.push("$");
         pila.push(inicial);
-        String t, rp;
+        String t, rp, reversa;
         int i = 0, j = 0;
         vec[0] = pila.peek();
         vec[1] = entrada;
         rp = pila.pop();
-        while (!rp.equals("$") && !entrada.equals("$")) {
+        while (!rp.equals("$")) {
             if (Character.isUpperCase(rp.charAt(0))) {
                 t = dame_p(rp, entrada.substring(0, 1));
                 if (!t.equals("")) {
                     salida = t;
+                    if (pila.size() > 0) {
+                        vec[0] = pila.peek();
+                    }
+                    vec[1] = entrada;
                     vec[2] = salida;
                     modelo.addRow(vec);
                     q = new StringBuilder(t.substring(3, t.length()));
+                    pila.pop();
+                    reversa = q.reverse().toString();
                     j = 0;
-                    rp = pila.pop();
-                    while (j < q.length()) {
-                        pila.push(q.reverse().substring(j, j + 1));
+                    while (j < reversa.length()) {
+                        if (!reversa.substring(j, j + 1).equals("&")) {
+                            pila.push(reversa.substring(j, j + 1));
+                        }
                         j++;
                     }
+                    if (pila.size() > 0) {
+                        rp = pila.peek();
+                    } else {
+                        rp = "$";
+                    }
                 } else {
-                    System.out.println("no sirve");
+                    vec[2] = "rechazar";
+                    modelo.addRow(vec);
+                    break;
                 }
             } else {
                 if (pila.peek().equals(entrada.substring(0, 1))) {
@@ -1315,9 +1334,17 @@ public class main extends javax.swing.JFrame {
                     rp = pila.peek();
                     entrada = entrada.substring(1, entrada.length());
                 } else {
-                    System.out.println("no sirve");
+                    vec[2] = "rechazar";
+                    modelo.addRow(vec);
+                    break;
                 }
             }
+        }
+        if (entrada.equals("$")) {
+            vec[0] = "$";
+            vec[1] = "$";
+            vec[2] = "Aceptar";
+            modelo.addRow(vec);
         }
 
     }//GEN-LAST:event_jButton2ActionPerformed
