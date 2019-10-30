@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Stack;
 import javax.swing.JFileChooser;
 import javax.swing.table.DefaultTableModel;
 
@@ -1132,7 +1133,7 @@ public class main extends javax.swing.JFrame {
                 h = 0;
                 while (h < noter.size()) {
                     if (modelo.getValueAt(h, 0).equals(k.getProd().substring(0, 1))) {
-                        modelo.moveRow(h,h, rr);
+                        modelo.moveRow(h, h, rr);
                         yaesta.add(k.getProd().substring(0, 1));
                         rr++;
                         break;
@@ -1252,28 +1253,73 @@ public class main extends javax.swing.JFrame {
         return temp;
     }
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        String cad = cadena.getText();
-        String mo;
-        int i = 0;
-        ArrayList<String> pila = new ArrayList();
-        ArrayList<String> entrada = new ArrayList();
-        ArrayList<String> salida = new ArrayList();
-        pila.add("$" + inicial);
-        entrada.add(cad + "$");
-        String prueba, prueba1;
-        while (!pila.get(i).equals("") && !entrada.get(i).equals("")) {
-            mo = mejorop2(entrada.get(i).substring(0, entrada.get(i).length() - 1), pila.get(i).substring(1, pila.get(i).length()));
-            if (mo.equals("")) {
-                salida.add("no aceptar");
-                break;
-            } else {
-                salida.add(mo);
-                i++;
+    String dame_p(String nt, String t) {
+        DefaultTableModel modelo = (DefaultTableModel) tbm.getModel();
+        int filas = modelo.getRowCount();
+        int colum = modelo.getColumnCount();
+        int i = 0, j = 0;
+        String res, prueba, prueba1;
+        while (i < filas) {
+            if (modelo.getValueAt(i, 0).equals(nt)) {
+                while (j < colum) {
+                    prueba = modelo.getColumnName(j);
+                    if (modelo.getColumnName(j).equals(t)) {
+                        return modelo.getValueAt(i, j).toString();
+                    }
+                    j++;
+                }
             }
-            pila.add(pila.get(i - 1).replace(pila.get(i).substring(1, pila.get(i).length()), mo));
-            entrada.add(entrada.get(i - 1));
+            i++;
         }
+        return "";
+    }
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        DefaultTableModel modelo = (DefaultTableModel) trecon.getModel();
+        StringBuilder q;
+        String entrada = cadena.getText() + "$";
+        String salida;
+        String[] vec = new String[3];
+        Stack<String> pila = new Stack<String>();
+        pila.push("$");
+        pila.push(inicial);
+        String t, rp;
+        int i = 0, j = 0;
+        vec[0] = pila.peek();
+        vec[1] = entrada;
+        rp = pila.pop();
+        while (!rp.equals("$") && !entrada.equals("$")) {
+            if (Character.isUpperCase(rp.charAt(0))) {
+                t = dame_p(rp, entrada.substring(0, 1));
+                if (!t.equals("")) {
+                    salida = t;
+                    vec[2] = salida;
+                    modelo.addRow(vec);
+                    q = new StringBuilder(t.substring(3, t.length()));
+                    j = 0;
+                    rp = pila.pop();
+                    while (j < q.length()) {
+                        pila.push(q.reverse().substring(j, j + 1));
+                        j++;
+                    }
+                } else {
+                    System.out.println("no sirve");
+                }
+            } else {
+                if (pila.peek().equals(entrada.substring(0, 1))) {
+                    vec[0] = pila.toString();
+                    vec[1] = entrada;
+                    vec[2] = "";
+                    modelo.addRow(vec);
+                    pila.pop();
+                    rp = pila.peek();
+                    entrada = entrada.substring(1, entrada.length());
+                } else {
+                    System.out.println("no sirve");
+                }
+            }
+        }
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
